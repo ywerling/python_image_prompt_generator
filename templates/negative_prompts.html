@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}Negative Prompts — PromptCraft AI{% endblock %}
+
+{% block content %}
+<div class="content">
+  <h2 class="heading">Negative Prompt Builder</h2>
+  <p class="description">Select what to exclude — generate a clean negative prompt ready to paste.</p>
+
+  <div class="tool-card w-100">
+    <form method="POST" action="{{ url_for('negative_prompts') }}">
+      <div class="row g-4">
+
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Describe your image <span class="text-muted small">(optional context)</span></label>
+          <textarea class="form-control" name="context" rows="2" placeholder="e.g. portrait of a woman in a forest">{{ context or '' }}</textarea>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Target Platform</label>
+          <select class="form-select" name="platform">
+            <option value="stable_diffusion">Stable Diffusion</option>
+            <option value="midjourney">Midjourney</option>
+            <option value="dalle">DALL·E 3</option>
+            <option value="leonardo">Leonardo AI</option>
+          </select>
+        </div>
+
+        <div class="col-12">
+          <label class="form-label fw-semibold">Common Issues to Exclude</label>
+          <div class="check-grid">
+            {% set options = [
+              ('anatomy','Bad anatomy'),('hands','Deformed hands'),('faces','Distorted faces'),
+              ('blur','Blurry / out of focus'),('watermark','Watermarks / text'),('artifacts','JPEG artifacts'),
+              ('extra_limbs','Extra limbs'),('mutation','Mutations'),('clone','Duplicate subjects'),
+              ('lowres','Low resolution'),('grainy','Grainy / noisy'),('oversaturated','Oversaturated colours'),
+              ('cartoon','Cartoon style'),('3d','3D / CGI look'),('sketch','Sketch / draft look')
+            ] %}
+            {% for val, label in options %}
+            <label class="check-item">
+              <input type="checkbox" name="exclude" value="{{ val }}"
+                {% if val in (selected or []) %}checked{% endif %}>
+              {{ label }}
+            </label>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="col-12">
+          <label class="form-label fw-semibold">Custom Exclusions <span class="text-muted small">(comma-separated)</span></label>
+          <input type="text" class="form-control" name="custom" placeholder="e.g. rain, shadows, crowds" value="{{ custom or '' }}">
+        </div>
+
+        <div class="col-12">
+          <button type="submit" class="button"><i class="fa fa-ban me-1"></i> Build Negative Prompt</button>
+        </div>
+      </div>
+    </form>
+
+    {% if result %}
+    <hr class="my-4">
+    <h5 class="fw-bold mb-2">Negative Prompt</h5>
+    <div class="result-box">{{ result }}</div>
+    <button class="button mt-3" onclick="navigator.clipboard.writeText(document.querySelector('.result-box').innerText)">
+      <i class="fa fa-copy me-1"></i> Copy
+    </button>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,11 +1,100 @@
 {% extends 'base.html' %}
 
-{% block title %}Page title{% endblock %}
+{% block title %}PromptCraft AI — Home{% endblock %}
 
 {% block content %}
+<div class="hero">
+  <h1><i class="fa fa-wand-magic-sparkles me-2"></i>PromptCraft AI</h1>
+  <p>Generate, refine, and explore prompts for your favourite AI image tools.</p>
+</div>
 
-<div class="container">
-  <h1 class="heading">Heading</h1>
-  <p class="description">Loren Pisum.</p>
+<div class="content">
+  <h2 class="heading">What would you like to do?</h2>
+  <p class="description">Choose a tool below to get started — hover a card to learn more.</p>
+
+  <!-- Prompt Generator -->
+  <div class="card">
+    <div class="front" style="background-image: url('https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=600');">
+      <i class="fa fa-pen-nib fa-2x mb-3"></i><br>Prompt Generator
+    </div>
+    <div class="back">
+      <div>
+        <h3 class="fw-bold mb-2">Prompt Generator</h3>
+        <p class="text-muted small mb-4">Turn a simple idea into a detailed, platform-ready prompt for Midjourney, DALL·E, Stable Diffusion and more.</p>
+        <a href="{{ url_for('prompt_generator') }}" class="button">Get Started</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Style Explorer -->
+  <div class="card">
+    <div class="front" style="background-image: url('https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=600');">
+      <i class="fa fa-palette fa-2x mb-3"></i><br>Style Explorer
+    </div>
+    <div class="back">
+      <div>
+        <h3 class="fw-bold mb-2">Style Explorer</h3>
+        <p class="text-muted small mb-4">Browse artistic styles, movements, and aesthetics. Copy style keywords directly into your prompts.</p>
+        <a href="{{ url_for('style_explorer') }}" class="button">Explore Styles</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Prompt Enhancer -->
+  <div class="card">
+    <div class="front" style="background-image: url('https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=600');">
+      <i class="fa fa-bolt fa-2x mb-3"></i><br>Prompt Enhancer
+    </div>
+    <div class="back">
+      <div>
+        <h3 class="fw-bold mb-2">Prompt Enhancer</h3>
+        <p class="text-muted small mb-4">Paste any existing prompt and get an improved, more detailed version with better composition and lighting cues.</p>
+        <a href="{{ url_for('prompt_enhancer') }}" class="button">Enhance</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Negative Prompt Builder -->
+  <div class="card">
+    <div class="front" style="background-image: url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600');">
+      <i class="fa fa-ban fa-2x mb-3"></i><br>Negative Prompts
+    </div>
+    <div class="back">
+      <div>
+        <h3 class="fw-bold mb-2">Negative Prompts</h3>
+        <p class="text-muted small mb-4">Build a targeted negative prompt to exclude unwanted elements, artefacts, and distortions from your images.</p>
+        <a href="{{ url_for('negative_prompts') }}" class="button">Build Negatives</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Batch Generator -->
+  <div class="card">
+    <div class="front" style="background-image: url('https://images.unsplash.com/photo-1558618047-f4e40e0d5f41?w=600');">
+      <i class="fa fa-layer-group fa-2x mb-3"></i><br>Batch Generator
+    </div>
+    <div class="back">
+      <div>
+        <h3 class="fw-bold mb-2">Batch Generator</h3>
+        <p class="text-muted small mb-4">Generate multiple prompt variations from one idea — perfect for A/B testing different styles and compositions.</p>
+        <a href="{{ url_for('batch_generator') }}" class="button">Batch Create</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Prompt Library -->
+  <div class="card">
+    <div class="front" style="background-image: url('https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=600');">
+      <i class="fa fa-book fa-2x mb-3"></i><br>Prompt Library
+    </div>
+    <div class="back">
+      <div>
+        <h3 class="fw-bold mb-2">Prompt Library</h3>
+        <p class="text-muted small mb-4">Save, organise, and revisit your best prompts. Tag by platform, style, or project for easy retrieval.</p>
+        <a href="{{ url_for('prompt_library') }}" class="button">Open Library</a>
+      </div>
+    </div>
+  </div>
+
 </div>
 {% endblock %}

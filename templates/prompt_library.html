@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}Prompt Library — PromptCraft AI{% endblock %}
+
+{% block content %}
+<div class="content">
+  <h2 class="heading">Prompt Library</h2>
+  <p class="description">Save, tag, and reuse your best prompts across all platforms.</p>
+
+  <!-- Save new prompt -->
+  <div class="tool-card w-100 mb-4">
+    <h5 class="fw-bold mb-3"><i class="fa fa-plus me-1"></i> Save a Prompt</h5>
+    <form method="POST" action="{{ url_for('prompt_library') }}">
+      <input type="hidden" name="action" value="save">
+      <div class="row g-3">
+        <div class="col-md-8">
+          <textarea class="form-control" name="prompt_text" rows="2" placeholder="Paste your prompt here…" required></textarea>
+        </div>
+        <div class="col-md-2">
+          <input type="text" class="form-control" name="label" placeholder="Label / title">
+        </div>
+        <div class="col-md-2">
+          <select class="form-select" name="platform">
+            <option value="midjourney">Midjourney</option>
+            <option value="dalle">DALL·E 3</option>
+            <option value="stable_diffusion">Stable Diffusion</option>
+            <option value="firefly">Adobe Firefly</option>
+            <option value="leonardo">Leonardo AI</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <input type="text" class="form-control" name="tags" placeholder="Tags (comma-separated): portrait, fantasy, dark">
+        </div>
+        <div class="col-md-6 d-flex align-items-end">
+          <button type="submit" class="button"><i class="fa fa-save me-1"></i> Save to Library</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Search / filter -->
+  <div class="w-100 mb-3">
+    <input type="text" id="libSearch" class="form-control" placeholder="Search library…" oninput="filterLib()">
+  </div>
+
+  <!-- Prompt entries -->
+  {% if prompts %}
+  <div id="libGrid" class="w-100">
+    {% for p in prompts %}
+    <div class="lib-item" data-text="{{ p.text|lower }}" data-tags="{{ p.tags|lower }}">
+      <div class="lib-meta">
+        <span class="badge bg-primary me-1">{{ p.platform }}</span>
+        {% for tag in p.tags.split(',') %}
+          {% if tag.strip() %}<span class="badge bg-secondary me-1">{{ tag.strip() }}</span>{% endif %}
+        {% endfor %}
+        <span class="text-muted small ms-2">{{ p.saved_at }}</span>
+      </div>
+      {% if p.label %}<div class="fw-semibold mb-1">{{ p.label }}</div>{% endif %}
+      <div class="result-box mb-2">{{ p.text }}</div>
+      <div class="d-flex gap-2">
+        <button class="button btn-sm" onclick="navigator.clipboard.writeText(this.closest('.lib-item').querySelector('.result-box').innerText)">
+          <i class="fa fa-copy me-1"></i> Copy
+        </button>
+        <form method="POST" action="{{ url_for('prompt_library') }}" class="d-inline">
+          <input type="hidden" name="action" value="delete">
+          <input type="hidden" name="prompt_id" value="{{ p.id }}">
+          <button type="submit" class="button delete-button btn-sm"><i class="fa fa-trash me-1"></i> Delete</button>
+        </form>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="text-center text-muted py-5 w-100">
+    <i class="fa fa-book-open fa-3x mb-3 d-block"></i>
+    Your library is empty — save your first prompt above.
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function filterLib() {
+  const q = document.getElementById('libSearch').value.toLowerCase();
+  document.querySelectorAll('.lib-item').forEach(item => {
+    const match = item.dataset.text.includes(q) || item.dataset.tags.includes(q);
+    item.style.display = match ? '' : 'none';
+  });
+}
+</script>
+{% endblock %}

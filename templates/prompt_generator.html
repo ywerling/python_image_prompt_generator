@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %}Prompt Generator — PromptCraft AI{% endblock %}
+
+{% block content %}
+<div class="content">
+  <h2 class="heading">Prompt Generator</h2>
+  <p class="description">Describe your idea and we'll craft a detailed prompt for your chosen AI image tool.</p>
+
+  <div class="tool-card w-100">
+    <form method="POST" action="{{ url_for('prompt_generator') }}">
+      <div class="row g-4">
+
+        <div class="col-md-8">
+          <label class="form-label fw-semibold">Your Idea</label>
+          <textarea class="form-control" name="idea" rows="3" placeholder="e.g. a cyberpunk city at night with neon reflections on wet streets">{{ idea or '' }}</textarea>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">Target Platform</label>
+          <select class="form-select" name="platform">
+            <option value="midjourney" {% if platform=='midjourney' %}selected{% endif %}>Midjourney</option>
+            <option value="dalle" {% if platform=='dalle' %}selected{% endif %}>DALL·E 3</option>
+            <option value="stable_diffusion" {% if platform=='stable_diffusion' %}selected{% endif %}>Stable Diffusion</option>
+            <option value="firefly" {% if platform=='firefly' %}selected{% endif %}>Adobe Firefly</option>
+            <option value="leonardo" {% if platform=='leonardo' %}selected{% endif %}>Leonardo AI</option>
+          </select>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">Art Style</label>
+          <select class="form-select" name="style">
+            <option value="">— None —</option>
+            <option value="photorealistic">Photorealistic</option>
+            <option value="digital_art">Digital Art</option>
+            <option value="oil_painting">Oil Painting</option>
+            <option value="watercolor">Watercolour</option>
+            <option value="anime">Anime / Manga</option>
+            <option value="concept_art">Concept Art</option>
+            <option value="pixel_art">Pixel Art</option>
+            <option value="3d_render">3D Render</option>
+          </select>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">Lighting</label>
+          <select class="form-select" name="lighting">
+            <option value="">— None —</option>
+            <option value="golden_hour">Golden Hour</option>
+            <option value="neon">Neon Glow</option>
+            <option value="studio">Studio Lighting</option>
+            <option value="dramatic">Dramatic / Chiaroscuro</option>
+            <option value="soft">Soft Diffused</option>
+            <option value="volumetric">Volumetric</option>
+          </select>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">Aspect Ratio</label>
+          <select class="form-select" name="ratio">
+            <option value="1:1">1:1 — Square</option>
+            <option value="16:9">16:9 — Landscape</option>
+            <option value="9:16">9:16 — Portrait</option>
+            <option value="4:3">4:3 — Classic</option>
+            <option value="3:2">3:2 — Photo</option>
+          </select>
+        </div>
+
+        <div class="col-12">
+          <label class="form-label fw-semibold">Extra Keywords <span class="text-muted small">(optional, comma-separated)</span></label>
+          <input type="text" class="form-control" name="keywords" placeholder="e.g. cinematic, 8k, ultra-detailed" value="{{ keywords or '' }}">
+        </div>
+
+        <div class="col-12">
+          <button type="submit" class="button">Generate Prompt</button>
+        </div>
+      </div>
+    </form>
+
+    {% if result %}
+    <hr class="my-4">
+    <h5 class="fw-bold mb-2"><i class="fa fa-sparkles me-1"></i> Generated Prompt</h5>
+    <div class="result-box">{{ result }}</div>
+    <button class="button mt-3" onclick="navigator.clipboard.writeText(document.querySelector('.result-box').innerText)">
+      <i class="fa fa-copy me-1"></i> Copy
+    </button>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}Prompt Enhancer — PromptCraft AI{% endblock %}
+
+{% block content %}
+<div class="content">
+  <h2 class="heading">Prompt Enhancer</h2>
+  <p class="description">Paste an existing prompt and get a richer, more detailed version back.</p>
+
+  <div class="tool-card w-100">
+    <form method="POST" action="{{ url_for('prompt_enhancer') }}">
+      <div class="row g-4">
+
+        <div class="col-12">
+          <label class="form-label fw-semibold">Your Existing Prompt</label>
+          <textarea class="form-control" name="original" rows="4" placeholder="Paste your current prompt here…">{{ original or '' }}</textarea>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">Enhancement Focus</label>
+          <select class="form-select" name="focus">
+            <option value="detail">More Detail</option>
+            <option value="composition">Composition & Framing</option>
+            <option value="lighting">Lighting & Mood</option>
+            <option value="style">Artistic Style</option>
+            <option value="technical">Technical Quality</option>
+          </select>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">Target Platform</label>
+          <select class="form-select" name="platform">
+            <option value="midjourney">Midjourney</option>
+            <option value="dalle">DALL·E 3</option>
+            <option value="stable_diffusion">Stable Diffusion</option>
+            <option value="firefly">Adobe Firefly</option>
+            <option value="leonardo">Leonardo AI</option>
+          </select>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">Intensity</label>
+          <select class="form-select" name="intensity">
+            <option value="subtle">Subtle — small tweaks</option>
+            <option value="moderate" selected>Moderate — balanced</option>
+            <option value="full">Full rewrite</option>
+          </select>
+        </div>
+
+        <div class="col-12">
+          <button type="submit" class="button"><i class="fa fa-bolt me-1"></i> Enhance Prompt</button>
+        </div>
+      </div>
+    </form>
+
+    {% if enhanced %}
+    <hr class="my-4">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <h6 class="fw-bold text-muted">Original</h6>
+        <div class="result-box result-box--muted">{{ original }}</div>
+      </div>
+      <div class="col-md-6">
+        <h6 class="fw-bold">Enhanced</h6>
+        <div class="result-box">{{ enhanced }}</div>
+        <button class="button mt-2" onclick="navigator.clipboard.writeText(document.querySelectorAll('.result-box')[1].innerText)">
+          <i class="fa fa-copy me-1"></i> Copy
+        </button>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Style Explorer — PromptCraft AI{% endblock %}
+
+{% block content %}
+<div class="content">
+  <h2 class="heading">Style Explorer</h2>
+  <p class="description">Browse artistic styles and copy keywords straight into your prompts.</p>
+
+  <div class="w-100 mb-4">
+    <input type="text" id="styleSearch" class="form-control" placeholder="Search styles…" oninput="filterStyles()">
+  </div>
+
+  <div id="styleGrid" class="style-grid w-100">
+    {% for style in styles %}
+    <div class="style-tile" data-tags="{{ style.tags }}">
+      <div class="style-tile-inner" style="background: {{ style.color }}">
+        <i class="fa {{ style.icon }} fa-2x mb-2"></i>
+        <h5>{{ style.name }}</h5>
+      </div>
+      <div class="style-tile-info">
+        <p class="small text-muted mb-2">{{ style.description }}</p>
+        <code class="style-keywords">{{ style.keywords }}</code>
+        <button class="button mt-2 w-100" onclick="copyStyle('{{ style.keywords }}')">
+          <i class="fa fa-copy me-1"></i> Copy Keywords
+        </button>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function copyStyle(text) {
+  navigator.clipboard.writeText(text);
+}
+function filterStyles() {
+  const q = document.getElementById('styleSearch').value.toLowerCase();
+  document.querySelectorAll('.style-tile').forEach(tile => {
+    const match = tile.innerText.toLowerCase().includes(q) || tile.dataset.tags.includes(q);
+    tile.style.display = match ? '' : 'none';
+  });
+}
+</script>
+{% endblock %}
