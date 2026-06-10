@@ -1,0 +1,330 @@
+{% extends 'base.html' %}
+
+{% block title %}Template Builder — PromptCraft AI{% endblock %}
+
+{% block styles %}
+{{ super() }}
+<style>
+  body { background: #0f0f13; color: #e2e2e8; }
+
+  .tb-wrap {
+    max-width: 760px;
+    margin: 2.5rem auto;
+    padding: 0 1.25rem;
+  }
+
+  .tb-heading {
+    font-size: 1.3rem;
+    font-weight: 600;
+    letter-spacing: .03em;
+    color: #a78bfa;
+    margin-bottom: 1.75rem;
+  }
+
+  .tb-card {
+    background: #1a1a24;
+    border: 1px solid #2e2e40;
+    border-radius: 12px;
+    padding: 1.6rem 2rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .tb-card-title {
+    font-size: .72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: #6b6b80;
+    margin-bottom: .9rem;
+  }
+
+  /* File row */
+  .file-row { display: flex; gap: 12px; align-items: center; }
+  .file-name {
+    flex: 1;
+    background: #12121a;
+    border: 1px solid #2e2e40;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: .9rem;
+    color: #9090a8;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  #file-input { display: none; }
+
+  /* Buttons */
+  .tb-btn {
+    background: #6d28d9;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-size: .9rem;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background .15s;
+  }
+  .tb-btn:hover  { background: #7c3aed; }
+  .tb-btn:active { background: #5b21b6; }
+  .tb-btn.copy   { background: #065f46; }
+  .tb-btn.copy:hover   { background: #047857; }
+  .tb-btn.copy.copied  { background: #1d4ed8; }
+  .tb-btn.save   { background: #1e3a5f; }
+  .tb-btn.save:hover   { background: #1e4a7f; }
+
+  /* Template preview */
+  .template-preview { font-size: 1rem; line-height: 1.8; color: #c4c4d4; }
+  .template-preview .placeholder {
+    display: inline-block;
+    background: #2d1f5e;
+    border: 1px solid #5b21b6;
+    border-radius: 6px;
+    padding: 2px 8px;
+    color: #a78bfa;
+    font-weight: 600;
+    font-size: .85rem;
+    vertical-align: middle;
+    transition: background .15s;
+  }
+  .template-preview .placeholder.filled {
+    background: #1a3a2a;
+    border-color: #16a34a;
+    color: #4ade80;
+  }
+
+  /* Params */
+  .params-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 16px; }
+  .param-group { display: flex; flex-direction: column; gap: 6px; }
+  .param-label { font-size: .78rem; font-weight: 600; color: #a78bfa; letter-spacing: .04em; }
+  .param-input {
+    background: #12121a;
+    border: 1px solid #2e2e40;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: .9rem;
+    color: #e2e2e8;
+    outline: none;
+    transition: border-color .15s;
+    width: 100%;
+  }
+  .param-input:focus { border-color: #7c3aed; }
+  .param-input::placeholder { color: #44445a; }
+
+  /* Output */
+  .output-text {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #e2e2e8;
+    background: #12121a;
+    border: 1px solid #2e2e40;
+    border-radius: 8px;
+    padding: 14px 16px;
+    min-height: 60px;
+    margin-bottom: 14px;
+    word-break: break-word;
+    white-space: pre-wrap;
+  }
+  .output-text .unfilled { color: #4a4a60; font-style: italic; }
+  .output-footer { display: flex; gap: 10px; justify-content: flex-end; }
+
+  /* Empty state */
+  .empty-state { text-align: center; color: #44445a; font-size: .9rem; padding: 1rem 0; }
+  .empty-state svg { display: block; margin: 0 auto 10px; opacity: .3; }
+
+  /* Flash messages */
+  .flash { border-radius: 8px; padding: .7rem 1rem; margin-bottom: 1rem; font-size: .9rem; }
+  .flash.success { background: #1a3a2a; border: 1px solid #16a34a; color: #4ade80; }
+  .flash.error   { background: #3a1a1a; border: 1px solid #dc2626; color: #f87171; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="tb-wrap">
+  <div class="tb-heading"><i class="fa fa-file-lines me-2"></i>Template Builder</div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for cat, msg in messages %}
+      <div class="flash {{ cat }}">{{ msg }}</div>
+    {% endfor %}
+  {% endwith %}
+
+  <!-- File picker -->
+  <div class="tb-card">
+    <div class="tb-card-title">Template File</div>
+    <div class="file-row">
+      <div class="file-name" id="file-name-display">No file selected</div>
+      <button class="tb-btn" onclick="document.getElementById('file-input').click()">Choose .txt File</button>
+    </div>
+    <input type="file" id="file-input" accept=".txt">
+  </div>
+
+  <!-- Template preview -->
+  <div class="tb-card" id="template-card" style="display:none">
+    <div class="tb-card-title">Template</div>
+    <div class="template-preview" id="template-preview"></div>
+  </div>
+
+  <!-- Parameters -->
+  <div class="tb-card" id="params-card" style="display:none">
+    <div class="tb-card-title">Parameters</div>
+    <div class="params-grid" id="params-grid"></div>
+  </div>
+
+  <!-- Output -->
+  <div class="tb-card" id="output-card" style="display:none">
+    <div class="tb-card-title">Generated Prompt</div>
+    <div class="output-text" id="output-text"></div>
+    <div class="output-footer">
+      <button class="tb-btn save" id="save-btn" onclick="saveToLibrary()">
+        <i class="fa fa-save me-1"></i> Save to Library
+      </button>
+      <button class="tb-btn copy" id="copy-btn" onclick="copyPrompt()">
+        <i class="fa fa-copy me-1"></i> Copy Prompt
+      </button>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div class="empty-state" id="empty-state">
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+      <polyline points="14 2 14 8 20 8"/>
+      <line x1="16" y1="13" x2="8" y2="13"/>
+      <line x1="16" y1="17" x2="8" y2="17"/>
+    </svg>
+    Select a .txt template file with <code style="color:#a78bfa">[placeholders]</code> to get started
+  </div>
+
+  <!-- Hidden form to POST the finished prompt to the library -->
+  <form id="save-form" method="POST" action="{{ url_for('template_builder_save') }}" style="display:none">
+    <input type="hidden" name="prompt_text" id="save-prompt-text">
+    <input type="hidden" name="label"        id="save-label">
+    <input type="hidden" name="platform"     value="template">
+    <input type="hidden" name="tags"         value="template-builder">
+  </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  let templateText = '';
+  let params = [];
+
+  document.getElementById('file-input').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    document.getElementById('file-name-display').textContent = file.name;
+    // store filename as default label for library save
+    document.getElementById('save-label').value = file.name.replace(/\.txt$/i, '');
+    const reader = new FileReader();
+    reader.onload = ev => loadTemplate(ev.target.result);
+    reader.readAsText(file);
+  });
+
+  function loadTemplate(text) {
+    templateText = text.trim();
+    const regex = /\[([^\]]+)\]/g;
+    const seen = new Set();
+    const ordered = [];
+    let m;
+    while ((m = regex.exec(templateText)) !== null) {
+      const key = m[1];
+      if (!seen.has(key)) { seen.add(key); ordered.push({ key, value: '' }); }
+    }
+    params = ordered;
+
+    renderTemplate();
+    renderParams();
+    renderOutput();
+
+    document.getElementById('template-card').style.display = '';
+    document.getElementById('params-card').style.display  = params.length ? '' : 'none';
+    document.getElementById('output-card').style.display  = '';
+    document.getElementById('empty-state').style.display  = 'none';
+  }
+
+  function renderTemplate() {
+    const preview = document.getElementById('template-preview');
+    let html = escapeHtml(templateText).replace(/\[([^\]]+)\]/g, (match, key) => {
+      const p = params.find(p => p.key === key);
+      const filled = p && p.value.trim() !== '';
+      const display = filled ? escapeHtml(p.value) : escapeHtml(match);
+      return `<span class="placeholder${filled ? ' filled' : ''}" data-key="${escapeHtml(key)}">${display}</span>`;
+    });
+    preview.innerHTML = html;
+  }
+
+  function renderParams() {
+    const grid = document.getElementById('params-grid');
+    grid.innerHTML = '';
+    params.forEach(p => {
+      const group = document.createElement('div');
+      group.className = 'param-group';
+
+      const label = document.createElement('label');
+      label.className = 'param-label';
+      label.textContent = `[${p.key}]`;
+
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.className = 'param-input';
+      input.placeholder = `Enter value for ${p.key}…`;
+      input.value = p.value;
+      input.addEventListener('input', function() {
+        p.value = this.value;
+        renderTemplate();
+        renderOutput();
+      });
+
+      group.appendChild(label);
+      group.appendChild(input);
+      grid.appendChild(group);
+    });
+  }
+
+  function renderOutput() {
+    const el = document.getElementById('output-text');
+    let result = buildResult();
+    const html = escapeHtml(result).replace(/\[([^\]]+)\]/g, m => `<span class="unfilled">${m}</span>`);
+    el.innerHTML = html;
+  }
+
+  function buildResult() {
+    return templateText.replace(/\[([^\]]+)\]/g, (match, key) => {
+      const p = params.find(p => p.key === key);
+      return (p && p.value.trim() !== '') ? p.value : match;
+    });
+  }
+
+  function copyPrompt() {
+    const result = buildResult();
+    const btn = document.getElementById('copy-btn');
+    const finish = () => {
+      btn.innerHTML = '<i class="fa fa-check me-1"></i> Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.innerHTML = '<i class="fa fa-copy me-1"></i> Copy Prompt'; btn.classList.remove('copied'); }, 2000);
+    };
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(result).then(finish);
+    } else {
+      const ta = document.createElement('textarea');
+      ta.value = result;
+      ta.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0';
+      document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+      finish();
+    }
+  }
+
+  function saveToLibrary() {
+    document.getElementById('save-prompt-text').value = buildResult();
+    document.getElementById('save-form').submit();
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+</script>
+{% endblock %}

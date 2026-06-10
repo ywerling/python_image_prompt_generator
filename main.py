@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 from datetime import datetime
 import sqlite3, os
 
 app = Flask(__name__)
+app.secret_key = "promptcraft-dev-key"
 
 # ---------------------------------------------------------------------------
 # SQLite persistence
@@ -315,6 +316,35 @@ def prompt_library():
         prompts = conn.execute("SELECT * FROM prompts ORDER BY id DESC").fetchall()
 
     return render_template("prompt_library.html", prompts=prompts)
+
+
+# ---------------------------------------------------------------------------
+# Template Builder
+# ---------------------------------------------------------------------------
+@app.route("/template-builder")
+def template_builder():
+    return render_template("template_builder.html")
+
+
+@app.route("/template-builder/save", methods=["POST"])
+def template_builder_save():
+    text = request.form.get("prompt_text", "").strip()
+    if text:
+        with get_db() as conn:
+            conn.execute(
+                "INSERT INTO prompts (text, label, platform, tags, saved_at) VALUES (?,?,?,?,?)",
+                (
+                    text,
+                    request.form.get("label", "").strip(),
+                    request.form.get("platform", "template"),
+                    request.form.get("tags", "template-builder"),
+                    datetime.now().strftime("%d %b %Y %H:%M"),
+                ),
+            )
+        flash("Prompt saved to library.", "success")
+    else:
+        flash("Nothing to save — fill in at least one parameter.", "error")
+    return redirect(url_for("template_builder"))
 
 
 # ---------------------------------------------------------------------------
