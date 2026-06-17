@@ -1,5 +1,5 @@
 /* ==========================================================
-   PromptCraft AI — Design System
+   Python AI Image Generator — Design System
    Palette: Teal · Coral · Cerulean
    ========================================================== */
 
@@ -71,15 +71,15 @@ body {
 /* ==========================================================
    Navbar override (Bootstrap)
    ========================================================== */
-.navbar.navbar-promptcraft {
+.navbar.navbar-pythonaigenerator {
   background-color: var(--cerulean-900) !important;
   border-bottom: 2px solid var(--teal-600);
 }
-.navbar.navbar-promptcraft .navbar-brand { color: var(--teal-200) !important; }
-.navbar.navbar-promptcraft .navbar-brand:hover { color: var(--teal-400) !important; }
-.navbar.navbar-promptcraft .nav-link { color: var(--neutral-light) !important; }
-.navbar.navbar-promptcraft .nav-link:hover,
-.navbar.navbar-promptcraft .nav-link:focus { color: var(--teal-400) !important; }
+.navbar.navbar-pythonaigenerator .navbar-brand { color: var(--teal-200) !important; }
+.navbar.navbar-pythonaigenerator .navbar-brand:hover { color: var(--teal-400) !important; }
+.navbar.navbar-pythonaigenerator .nav-link { color: var(--neutral-light) !important; }
+.navbar.navbar-pythonaigenerator .nav-link:hover,
+.navbar.navbar-pythonaigenerator .nav-link:focus { color: var(--teal-400) !important; }
 
 /* ==========================================================
    Hero

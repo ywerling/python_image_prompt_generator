@@ -3,7 +3,7 @@ from datetime import datetime
 import sqlite3, os
 
 app = Flask(__name__)
-app.secret_key = "promptcraft-dev-key"
+app.secret_key = "python-ai-generator-dev-key"
 
 # ---------------------------------------------------------------------------
 # SQLite persistence
