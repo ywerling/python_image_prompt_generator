@@ -1,10 +1,63 @@
+/* ==========================================================
+   PromptCraft AI — Design System
+   Palette: Teal · Coral · Cerulean
+   ========================================================== */
+
+:root {
+  /* ── Teal ─────────────────────────────────────────── */
+  --teal-50:  #E0F4F1;
+  --teal-200: #A8DDD6;
+  --teal-400: #3DBFB0;
+  --teal-600: #1A9688;
+  --teal-800: #0A6B5E;
+  --teal-900: #054237;
+
+  /* ── Coral ────────────────────────────────────────── */
+  --coral-50:  #FEF0EC;
+  --coral-200: #F9C4B0;
+  --coral-400: #F48060;
+  --coral-600: #E05535;
+  --coral-800: #A33520;
+  --coral-900: #6B2012;
+
+  /* ── Cerulean ─────────────────────────────────────── */
+  --cerulean-50:  #E6F3FB;
+  --cerulean-200: #A3CEED;
+  --cerulean-400: #3D9ED4;
+  --cerulean-600: #1A78B0;
+  --cerulean-800: #0B5A8A;
+  --cerulean-900: #063A5C;
+
+  /* ── Neutrals ─────────────────────────────────────── */
+  --neutral-white:   #F7F8F8;
+  --neutral-light:   #DCE3E5;
+  --neutral-mid:     #8FA5AC;
+  --neutral-dark:    #3A3D3F;
+  --neutral-darkest: #1C1E1F;
+
+  /* ── Semantic aliases ─────────────────────────────── */
+  --color-primary:      var(--teal-600);
+  --color-primary-dark: var(--teal-800);
+  --color-accent:       var(--cerulean-600);
+  --color-danger:       var(--coral-600);
+  --color-danger-dark:  var(--coral-800);
+  --color-bg:           #EEF4F3;
+  --color-surface:      #ffffff;
+  --color-text:         var(--neutral-dark);
+  --color-text-muted:   var(--neutral-mid);
+  --color-border:       var(--neutral-light);
+}
+
+/* ==========================================================
+   Base
+   ========================================================== */
 *, *:before, *:after { box-sizing: border-box; }
 
 html {
   font-size: 18px;
   line-height: 1.5;
   font-weight: 300;
-  color: #333;
+  color: var(--color-text);
   font-family: "Nunito Sans", sans-serif;
 }
 
@@ -12,12 +65,27 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
-  background-color: #ecf0f9;
+  background-color: var(--color-bg);
 }
 
-/* ── Hero ────────────────────────────────────────────────── */
+/* ==========================================================
+   Navbar override (Bootstrap)
+   ========================================================== */
+.navbar.navbar-promptcraft {
+  background-color: var(--cerulean-900) !important;
+  border-bottom: 2px solid var(--teal-600);
+}
+.navbar.navbar-promptcraft .navbar-brand { color: var(--teal-200) !important; }
+.navbar.navbar-promptcraft .navbar-brand:hover { color: var(--teal-400) !important; }
+.navbar.navbar-promptcraft .nav-link { color: var(--neutral-light) !important; }
+.navbar.navbar-promptcraft .nav-link:hover,
+.navbar.navbar-promptcraft .nav-link:focus { color: var(--teal-400) !important; }
+
+/* ==========================================================
+   Hero
+   ========================================================== */
 .hero {
-  background: linear-gradient(135deg, #1a57e6, #1a9be6);
+  background: linear-gradient(135deg, var(--teal-800), var(--cerulean-600));
   color: #fff;
   text-align: center;
   padding: 4rem 2rem 3rem;
@@ -25,7 +93,9 @@ body {
 .hero h1 { font-family: Poppins, sans-serif; font-size: 2.4rem; font-weight: 700; margin-bottom: .5rem; }
 .hero p  { font-size: 1.1rem; opacity: .9; margin: 0; }
 
-/* ── Layout ──────────────────────────────────────────────── */
+/* ==========================================================
+   Layout
+   ========================================================== */
 .content {
   display: flex;
   flex-wrap: wrap;
@@ -52,7 +122,7 @@ body {
   position: absolute;
   width: 60px;
   height: 4px;
-  background: linear-gradient(135deg, #1a9be6, #1a57e6);
+  background: linear-gradient(135deg, var(--teal-400), var(--cerulean-600));
   bottom: 0;
 }
 
@@ -61,9 +131,12 @@ body {
   margin-top: 0;
   margin-left: 1rem;
   margin-bottom: 2rem;
+  color: var(--color-text-muted);
 }
 
-/* ── Flip Cards (landing page) ───────────────────────────── */
+/* ==========================================================
+   Flip Cards (landing page)
+   ========================================================== */
 .card {
   color: inherit;
   cursor: pointer;
@@ -75,8 +148,8 @@ body {
   position: relative;
   text-decoration: none;
 }
-@media (max-width: 900px)  { .card { width: calc(50% - 3rem); min-width: calc(50% - 3rem); } }
-@media (max-width: 560px)  { .card { width: 100%; min-width: 100%; } }
+@media (max-width: 900px) { .card { width: calc(50% - 3rem); min-width: calc(50% - 3rem); } }
+@media (max-width: 560px) { .card { width: 100%; min-width: 100%; } }
 
 .front, .back {
   display: flex;
@@ -108,26 +181,29 @@ body {
   display: block;
   content: '';
   top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(135deg, #1a9be6, #1a57e6);
-  opacity: .35;
+  background: linear-gradient(135deg, var(--teal-800), var(--cerulean-800));
+  opacity: .5;
   z-index: -1;
   border-radius: 10px;
 }
-.card:hover .front           { transform: rotateY(180deg); }
+.card:hover .front                 { transform: rotateY(180deg); }
 .card:nth-child(even):hover .front { transform: rotateY(-180deg); }
 
 .back {
-  background: #fff;
+  background: var(--color-surface);
   transform: rotateY(-180deg);
   padding: 2em;
   border-radius: 10px;
-  box-shadow: 0 8px 32px rgba(26,87,230,.12);
+  border: 1px solid var(--teal-200);
+  box-shadow: 0 8px 32px rgba(10, 107, 94, .12);
 }
-.card:hover .back                   { transform: rotateY(0deg); }
-.card:nth-child(even) .back         { transform: rotateY(180deg); }
-.card:nth-child(even):hover .back   { transform: rotateY(0deg); }
+.card:hover .back                  { transform: rotateY(0deg); }
+.card:nth-child(even) .back        { transform: rotateY(180deg); }
+.card:nth-child(even):hover .back  { transform: rotateY(0deg); }
 
-/* ── Button ──────────────────────────────────────────────── */
+/* ==========================================================
+   Button
+   ========================================================== */
 .button {
   display: inline-block;
   transform: translateZ(40px);
@@ -140,7 +216,7 @@ body {
   border-radius: 100px;
   font: inherit;
   font-size: .9rem;
-  background: linear-gradient(135deg, #1a9be6, #1a57e6);
+  background: linear-gradient(135deg, var(--teal-600), var(--cerulean-600));
   border: none;
   position: relative;
   transform-style: preserve-3d;
@@ -160,49 +236,67 @@ body {
   border-radius: 100px;
   left: 10px;
   top: 16px;
-  box-shadow: 0 0 10px 10px rgba(26,87,230,.25);
-  background-color: rgba(26,87,230,.25);
+  box-shadow: 0 0 10px 10px rgba(26, 120, 176, .22);
+  background-color: rgba(26, 120, 176, .22);
 }
-.button:hover         { transform: translateZ(55px); }
+.button:hover         { transform: translateZ(55px); color: #fff; }
 .button:hover:before  { transform: translateZ(-55px); }
 .button:active        { transform: translateZ(20px); }
 .button:active:before { transform: translateZ(-20px); top: 12px; }
 
 .button.delete-button {
-  background: linear-gradient(135deg, #e61a46, #e61a1a);
+  background: linear-gradient(135deg, var(--coral-400), var(--coral-800));
 }
 .button.delete-button:before {
-  box-shadow: 0 0 10px 10px rgba(230,26,26,.25);
-  background-color: rgba(230,26,26,.25);
+  box-shadow: 0 0 10px 10px rgba(163, 53, 32, .22);
+  background-color: rgba(163, 53, 32, .22);
 }
 
-/* ── Tool pages ──────────────────────────────────────────── */
+/* ==========================================================
+   Tool pages
+   ========================================================== */
 .tool-card {
-  background: #fff;
+  background: var(--color-surface);
   border-radius: 12px;
   padding: 2rem;
-  box-shadow: 0 4px 24px rgba(26,87,230,.08);
+  border: 1px solid var(--teal-200);
+  box-shadow: 0 4px 24px rgba(10, 107, 94, .07);
   margin-bottom: 1.5rem;
 }
 
 .result-box {
-  background: #f0f4ff;
-  border-left: 4px solid #1a57e6;
-  border-radius: 6px;
+  background: var(--cerulean-50);
+  border-left: 4px solid var(--cerulean-600);
+  border-radius: 0 6px 6px 0;
   padding: 1rem 1.2rem;
   font-family: "Courier New", monospace;
   font-size: .85rem;
   line-height: 1.6;
   white-space: pre-wrap;
   word-break: break-word;
+  color: var(--cerulean-900);
 }
 .result-box--muted {
-  background: #f7f7f7;
-  border-left-color: #aaa;
-  color: #666;
+  background: var(--neutral-white);
+  border-left-color: var(--neutral-mid);
+  color: var(--color-text-muted);
 }
 
-/* ── Style Explorer ──────────────────────────────────────── */
+/* Bootstrap form overrides */
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--teal-400);
+  box-shadow: 0 0 0 .2rem rgba(61, 191, 176, .25);
+}
+.form-label.fw-semibold { color: var(--cerulean-800); }
+
+/* Badge overrides */
+.badge.bg-primary { background-color: var(--cerulean-600) !important; }
+.badge.bg-secondary { background-color: var(--neutral-mid) !important; }
+
+/* ==========================================================
+   Style Explorer
+   ========================================================== */
 .style-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -211,8 +305,8 @@ body {
 .style-tile {
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 4px 16px rgba(0,0,0,.1);
-  background: #fff;
+  border: 1px solid var(--teal-200);
+  background: var(--color-surface);
 }
 .style-tile-inner {
   color: #fff;
@@ -221,20 +315,20 @@ body {
   font-family: Poppins, sans-serif;
   font-weight: 600;
 }
-.style-tile-info {
-  padding: 1rem 1.2rem 1.4rem;
-}
+.style-tile-info { padding: 1rem 1.2rem 1.4rem; }
 .style-keywords {
   display: block;
-  background: #f0f4ff;
+  background: var(--cerulean-50);
   border-radius: 4px;
   padding: .4rem .6rem;
   font-size: .75rem;
-  color: #1a57e6;
+  color: var(--cerulean-800);
   word-break: break-word;
 }
 
-/* ── Negative prompt checkboxes ──────────────────────────── */
+/* ==========================================================
+   Negative Prompt checkboxes
+   ========================================================== */
 .check-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -244,15 +338,20 @@ body {
   display: flex;
   align-items: center;
   gap: .5rem;
-  background: #f7f9ff;
+  background: var(--teal-50);
   border-radius: 6px;
   padding: .4rem .8rem;
   cursor: pointer;
   font-size: .9rem;
+  border: 1px solid transparent;
+  transition: background .15s, border-color .15s;
 }
-.check-item:hover { background: #e5edff; }
+.check-item:hover { background: var(--teal-200); border-color: var(--teal-400); }
+.check-item input[type="checkbox"]:checked + * { color: var(--teal-800); font-weight: 600; }
 
-/* ── Batch list ──────────────────────────────────────────── */
+/* ==========================================================
+   Batch list
+   ========================================================== */
 .batch-list { width: 100%; }
 .batch-item {
   display: flex;
@@ -265,7 +364,7 @@ body {
   width: 2rem;
   height: 2rem;
   border-radius: 50%;
-  background: linear-gradient(135deg, #1a9be6, #1a57e6);
+  background: linear-gradient(135deg, var(--teal-600), var(--cerulean-600));
   color: #fff;
   display: flex;
   align-items: center;
@@ -275,12 +374,35 @@ body {
   margin-top: .6rem;
 }
 
-/* ── Library ─────────────────────────────────────────────── */
+/* ==========================================================
+   Prompt Library
+   ========================================================== */
 .lib-item {
-  background: #fff;
+  background: var(--color-surface);
   border-radius: 10px;
   padding: 1.2rem 1.4rem;
-  box-shadow: 0 2px 12px rgba(26,87,230,.07);
+  border: 1px solid var(--teal-200);
+  box-shadow: 0 2px 12px rgba(10, 107, 94, .06);
   margin-bottom: 1rem;
 }
 .lib-meta { margin-bottom: .5rem; }
+
+/* ==========================================================
+   Flash messages
+   ========================================================== */
+.flash {
+  border-radius: 8px;
+  padding: .7rem 1rem;
+  margin-bottom: 1rem;
+  font-size: .9rem;
+}
+.flash.success {
+  background: var(--teal-50);
+  border: 1px solid var(--teal-400);
+  color: var(--teal-800);
+}
+.flash.error {
+  background: var(--coral-50);
+  border: 1px solid var(--coral-400);
+  color: var(--coral-800);
+}
